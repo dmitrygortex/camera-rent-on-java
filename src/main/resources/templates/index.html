@@ -1,0 +1,124 @@
+
+<!--head th:replace="~{fragments/head}"/-->
+
+
+<!--main th:replace="fragments/catalog-page :: main"/-->
+<!DOCTYPE html>
+<html lang="ru" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${model.baseViewModel.title}">home page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column h-100">
+<header th:replace="~{fragments/headers/header-main}"></header>
+
+<!--img class="card-img-top pb-5" th:src="${model.bannerImageUrl}" alt="banner not found"/-->
+
+<div class="container mt-4 pb-4">
+    <div class="card border-dark shadow-lg">
+        <img class="card-img-top" th:src="${model.bannerImageUrl}" alt="banner not found">
+    </div>
+</div>
+
+<main class="container my-4 pb-4">
+    <section class="mb-5">
+    <h2 class="pt5">Категории</h2>
+    <div class="row text-center mb-4">
+        <a class="col category-icon text-decoration-none" id="cameraIcon" href="catalog/cameras">
+            <div class="fs-1">📹</div>
+            <div>Камеры</div>
+        </a>
+        <a class="col category-icon text-decoration-none" id="lensIcon" href="catalog/lenses">
+            <div class="fs-1">📸</div>
+            <div>Объективы</div>
+        </a>
+        <a class="col category-icon text-decoration-none" id="lightIcon" href="catalog/lights">
+            <div class="fs-1">💡</div>
+            <div>Свет</div>
+        </a>
+        <a class="col category-icon text-decoration-none" id="equipmentIcon" href="catalog/operatorEquipments">
+            <div class="fs-1">🎬</div>
+            <div>Операторское оборудование</div>
+        </a>
+        <a class="col category-icon text-decoration-none" id="setsIcon" href="catalog/readyKits">
+            <div class="fs-1">📦</div>
+            <div>Готовые комплекты</div>
+        </a>
+        <a class="col category-icon text-decoration-none" id="accessoriesIcon" href="catalog/accessories">
+            <div class="fs-1">🎤</div>
+            <div>Аксессуары для съемки</div>
+        </a>
+        <a class="col category-icon text-decoration-none" id="externalDevicesIcon" href="catalog/externalDevices">
+            <div class="fs-1">🔌</div>
+            <div>Внешние устройства</div>
+        </a>
+    </div>
+    </section>
+
+
+
+    <section class="mb-5">
+        <h2 class="pt5">Популярное оборудование</h2>
+        <div class="row" id="popularEquipmentList">
+            <div th:if="${#lists.isEmpty(model.popularEquipmentSectionViewModel.items)}" class="alert bg-dark text-white mb-5">
+                Популярное оборудование не найдено.
+            </div>
+            <div class="popular-types-list row text-center mb-4" th:if="${not #lists.isEmpty(model.popularEquipmentSectionViewModel.items)}">
+                <div class="card col mb-4" th:each="type : ${model.popularEquipmentSectionViewModel.items}">
+                    <img class="card-img-top" th:src="@{'/images/' + ${type.imageUrl}}" th:alt="${type.name}"/>
+                    <div class="card-body text-center">
+                        <h5 class="card-title" th:text="${type.name}">Название</h5>
+                        <p class="card-text">Рейтинг: <span th:text="${type.rating}">0</span></p>
+                        <p class="card-text">Цена: <span th:text="${type.pricePerDay}">0</span> ₽</p>
+                        <a th:href="@{'/units/' + ${type.name}}" class="btn btn-dark">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <h2 class="pt5">Большие скидки</h2>
+        <div class="row" id="discountedEquipment">
+            <div th:if="${#lists.isEmpty(model.popularEquipmentSectionViewModel.items)}" class="alert bg-dark text-white mb-5">
+                Оборудование со скидками не найдено.
+            </div>
+            <div class="sales-types-list row text-center mb-4" th:if="${not #lists.isEmpty(model.equipmentSalesSectionViewModel.items)}">
+                <div class="card col mb-4" th:each="type : ${model.equipmentSalesSectionViewModel().items}">
+                    <img class="card-img-top" th:src="@{'/images/' + ${type.imageUrl}}" th:alt="${type.name}"/>
+                    <div class="card-body text-center">
+                        <h5 class="card-title" th:text="${type.name}">Название</h5>
+                        <p class="card-text">Рейтинг: <span th:text="${type.rating}">0</span></p>
+                        <p class="card-text">Цена: <span th:text="${type.pricePerDay}">0</span> ₽</p>
+                        <a th:href="@{'/units/' + ${type.name}}" class="btn btn-dark">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="pt5">Наборы под разные цели</h2>
+        <div class="row" id="equipmentKits">
+            <div th:if="${#lists.isEmpty(model.equipmentSetsSectionViewModel.items)}" class="alert bg-dark text-white mb-5">
+                Наборы не найдены.
+            </div>
+            <div class="kit-types-list row text-center mb-4" th:if="${not #lists.isEmpty(model.equipmentSetsSectionViewModel.items)}">
+                <div class="card col-lg-3 col-md-3 mb-4" th:each="type : ${model.equipmentSetsSectionViewModel.items}">
+                    <img class="card-img-top" th:src="@{'/images/' + ${type.imageUrl}}" th:alt="${type.name}"/>
+                    <div class="card-body text-center">
+                        <h5 class="card-title" th:text="${type.name}">Название</h5>
+                        <p class="card-text">Рейтинг: <span th:text="${type.rating}">0</span></p>
+                        <p class="card-text">Цена: <span th:text="${type.pricePerDay}">0</span> ₽</p>
+                        <a th:href="@{'/units/' + ${type.name}}" class="btn btn-dark">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>
