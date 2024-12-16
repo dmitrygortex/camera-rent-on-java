@@ -82,7 +82,7 @@ public class UserRepositoryImpl extends BaseRepositoryImpl<User> implements User
     }
 
     @Override
-    public void activateUser(Long id) {
+    public void activateUser(int id) {
         User user = entityManager.find(User.class, id);
         if (user != null && user.isDeleted()) {
             user.setDeleted(false);
@@ -91,7 +91,7 @@ public class UserRepositoryImpl extends BaseRepositoryImpl<User> implements User
     }
 
     @Override
-    public void deactivateUser(Long id) {
+    public void deactivateUser(int id) {
         User user = entityManager.find(User.class, id);
         if (user != null && !user.isDeleted()) {
             user.setDeleted(true);

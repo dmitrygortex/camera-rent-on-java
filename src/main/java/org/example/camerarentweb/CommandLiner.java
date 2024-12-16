@@ -33,7 +33,7 @@ public class CommandLiner implements CommandLineRunner {
                 "password",
                 "some@mad.ru",
                 "Mad",
-                "John",
+                "Pole",
                 UserRole.USER
                 );
         user1 = userRepository.save(user1);
@@ -46,7 +46,20 @@ public class CommandLiner implements CommandLineRunner {
                 "Dima",
                 UserRole.USER
         );
+
         user2 = userRepository.save(user2);
+
+        User user3 = new User(
+                "89090073399",
+                "toopseeecreet))",
+                "somemaaail@mail.ru",
+                "Belfort",
+                "Jordan",
+                UserRole.USER
+        );
+        user3 = userRepository.save(user3);
+
+
 
         // категории (надо подумать как названия норм сделать мб поле добавить в энтити)
         Category cameras = new Category();

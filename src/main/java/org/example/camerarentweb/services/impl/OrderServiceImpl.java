@@ -18,6 +18,7 @@ import java.util.Optional;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    // не забыть поменять на нормально добавление зависиомстей через конструктор!!!
     @Autowired
     private OrderRepositoryImpl orderRepository;
     @Autowired
@@ -29,30 +30,40 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Order createOrder(User user, List<EquipmentUnit> equipmentUnits, LocalDateTime startDate, LocalDateTime endDate) {
         Order order = new Order();
-        orderRepository.save(order);
         order.setUser(user);
         order.setStartDate(startDate);
         order.setEndDate(endDate);
         order.setStatus(OrderStatus.CREATED);
         order.setAmount(equipmentUnits.size());
-        orderRepository.save(order);
+        orderRepository.save(order); // Сохраняем заказ, чтобы получить ID
 
-        List<OrderEquipmentUnit> orderEquipmentUnits = new ArrayList<>();
+        // Создаём и сохраняем связи OrderEquipmentUnit
         for (EquipmentUnit unit : equipmentUnits) {
             OrderEquipmentUnit orderEquipmentUnit = new OrderEquipmentUnit();
+
+            // Создаём составной ключ
+            OrderEquipmentUnitId id = new OrderEquipmentUnitId();
+            id.setOrderId(order.getId());
+            id.setEquipmentUnitId(unit.getId());
+            orderEquipmentUnit.setId(id);
+
             orderEquipmentUnit.setOrder(order);
             orderEquipmentUnit.setEquipmentUnit(unit);
-            orderEquipmentUnit.setQuantity(1); // как заглушка ставлю один пока
-            orderEquipmentUnits.add(orderEquipmentUnit);
+            orderEquipmentUnit.setQuantity(1); // Заглушка для количества
+
+            orderEquipmentUnitRepository.save(orderEquipmentUnit);
         }
-        orderEquipmentUnits.forEach(orderEquipmentUnitRepository::save);
-        order.setStatus(OrderStatus.CONFIRMED);
+
+        // Обновляем статус оборудования
         for (EquipmentUnit unit : equipmentUnits) {
             equipmentUnitService.changeUnitStatus(unit.getId(), EquipmentStatus.RESERVED);
         }
 
+        // Устанавливаем стоимость заказа
         order.setCost(calculateOrderCost(order));
-    
+        order.setStatus(OrderStatus.CONFIRMED);
+
+        // Сохраняем обновленный заказ
         return orderRepository.save(order);
     }
 

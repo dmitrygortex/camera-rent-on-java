@@ -32,7 +32,7 @@ public class Order extends BaseEntity {
 //    }
 
 
-    @Column(name = "amount", nullable = false)
+    @Column(name = "amount", nullable = true)
     @Min(1)
     public int getAmount() {
         return amount;
@@ -60,7 +60,7 @@ public class Order extends BaseEntity {
         return endDate;
     }
 
-    @Column(name = "cost", nullable = false)
+    @Column(name = "cost", nullable = true)
     public double getCost() {
         return cost;
     }

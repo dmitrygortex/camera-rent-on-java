@@ -62,10 +62,7 @@ import org.example.camerarentweb.entities.EquipmentStatus;
 import org.example.camerarentweb.entities.EquipmentUnit;
 import org.example.camerarentweb.entities.User;
 import org.example.camerarentweb.entities.UserRole;
-import org.example.camerarentweb.services.EquipmentTypeDomainService;
-import org.example.camerarentweb.services.EquipmentUnitService;
-import org.example.camerarentweb.services.OrderService;
-import org.example.camerarentweb.services.ReviewService;
+import org.example.camerarentweb.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,6 +71,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/units")
@@ -83,16 +81,19 @@ public class UnitControllerImpl extends BaseControllerImpl {
     private final ReviewService reviewService;
     private final EquipmentUnitService equipmentUnitService;
     private final OrderService orderService;
+    private final UserService userService;
 
     @Autowired
     public UnitControllerImpl(EquipmentTypeDomainService equipmentTypeDomainService,
                               ReviewService reviewService,
                               EquipmentUnitService equipmentUnitService,
-                              OrderService orderService) {
+                              OrderService orderService,
+                              UserService userService) {
         this.equipmentTypeDomainService = equipmentTypeDomainService;
         this.reviewService = reviewService;
         this.equipmentUnitService = equipmentUnitService;
         this.orderService = orderService;
+        this.userService = userService;
     }
 
     @GetMapping("/{name}")
@@ -157,8 +158,11 @@ public class UnitControllerImpl extends BaseControllerImpl {
             LocalDateTime start = LocalDate.parse(startDate).atStartOfDay();
             LocalDateTime end = LocalDate.parse(endDate).atStartOfDay();
 
+            System.out.println("start date in UnitControllerImpl bookEquipment: " + start.toString());
+            System.out.println("end date in UnitControllerImpl bookEquipment: " + end.toString());
+
             // сюда скеьюрити подключу и норм будет
-            User user = getCurrentUser();
+            User user = userService.getAllUsers().getFirst();
 
             EquipmentUnit equipmentUnit = equipmentUnitService.findById(equipmentId);
             if (equipmentUnit == null) {
@@ -168,24 +172,13 @@ public class UnitControllerImpl extends BaseControllerImpl {
 
             orderService.createOrder(user, List.of(equipmentUnit), start, end);
 
-            return "redirect:/orders/success";
+            //return "redirect:/rent-success-page";
+            return "rent-success-page";
         } catch (Exception e) {
             model.addAttribute("error", "Произошла ошибка при бронировании");
             System.out.println(e.getMessage());
             e.printStackTrace();
             return "error/rent";
         }
-    }
-
-    private User getCurrentUser() {
-        // Заглушка для текущего пользователя
-        return new User(
-                "89090073399",
-                "toopseeecreet))",
-                "somemaaail@mail.ru",
-                "Belfort",
-                "Jordan",
-                UserRole.USER
-        );
     }
 }

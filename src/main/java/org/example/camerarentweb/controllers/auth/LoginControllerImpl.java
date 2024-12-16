@@ -9,14 +9,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/auth")
 public class LoginControllerImpl implements LoginController {
 
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         model.addAttribute("form", new UserLoginInputModel());
-        return "login";
+        return "login-page";
     }
 
     @Override
@@ -27,7 +29,7 @@ public class LoginControllerImpl implements LoginController {
             Model model
     ) {
         if (bindingResult.hasErrors()) {
-            return "login";
+            return "login-page";
         }
         return "index";
     }
