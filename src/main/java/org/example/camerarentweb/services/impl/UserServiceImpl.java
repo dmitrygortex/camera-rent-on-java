@@ -38,8 +38,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id.intValue());
+    public Optional<User> getUserById(int id) {
+        return userRepository.findById(id);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updatePassword(Long userId, String oldPassword, String newPassword) {
+    public void updatePassword(int userId, String oldPassword, String newPassword) {
         Optional<User> userOpt = getUserById(userId);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateEmail(Long userId, String newEmail) {
+    public void updateEmail(int userId, String newEmail) {
         Optional<User> userOpt = getUserById(userId);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updatePhoneNumber(Long userId, String newPhoneNumber) {
+    public void updatePhoneNumber(int userId, String newPhoneNumber) {
         Optional<User> userOpt = getUserById(userId);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUserRole(Long userId, UserRole newRole) {
+    public void updateUserRole(int userId, UserRole newRole) {
         Optional<User> userOpt = getUserById(userId);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
@@ -126,8 +126,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUser(Long userId) {
-        userRepository.softDeleteById(userId.intValue());
+    public void deleteUser(int userId) {
+        userRepository.softDeleteById(userId);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void logoutUser(Long userId) {
+    public void logoutUser(int userId) {
         // i will make it after lesson with authorization theory
     }
 
@@ -166,18 +166,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void activateUser(Long userId) {
+    public void activateUser(int userId) {
         userRepository.activateUser(userId);
     }
 
     @Override
     @Transactional
-    public void deactivateUser(Long userId) {
+    public void deactivateUser(int userId) {
         userRepository.deactivateUser(userId);
     }
 
     @Override
-    public boolean isUserActive(Long userId) {
+    public boolean isUserActive(int userId) {
         Optional<User> userOpt = getUserById(userId);
         return userOpt.map(user -> !user.isDeleted()).orElse(false);
     }

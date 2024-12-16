@@ -24,7 +24,9 @@ public class OrderEquipmentUnitRepositoryImpl implements OrderEquipmentUnitRepos
 
     @Transactional
     public OrderEquipmentUnit save(OrderEquipmentUnit entity) {
-        if (entity.getId().equals(0)) {
+        System.out.println("Saving entity: " + entity);
+        System.out.println("Entity ID: " + entity.getId());
+        if (entity.getId() == null || entity.getId().equals(0)) {
             entityManager.persist(entity);
         } else {
             entity = entityManager.merge(entity);

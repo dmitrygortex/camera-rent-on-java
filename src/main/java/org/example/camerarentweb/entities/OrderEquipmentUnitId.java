@@ -1,6 +1,8 @@
 package org.example.camerarentweb.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
+
 import jakarta.persistence.Embeddable;
 
 @Embeddable
@@ -27,6 +29,7 @@ public class OrderEquipmentUnitId implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        // мб добавить проверку на null, подумать над этим
         if (!(o instanceof OrderEquipmentUnitId)) return false;
         OrderEquipmentUnitId that = (OrderEquipmentUnitId) o;
         return orderId.equals(that.orderId) && equipmentUnitId.equals(that.equipmentUnitId);
@@ -34,6 +37,8 @@ public class OrderEquipmentUnitId implements Serializable {
 
     @Override
     public int hashCode() {
-        return orderId.hashCode() + equipmentUnitId.hashCode();
+        //почитать какое хэширование лучшая практика
+        //return orderId.hashCode() + equipmentUnitId.hashCode();
+        return Objects.hash(orderId, equipmentUnitId);
     }
 }

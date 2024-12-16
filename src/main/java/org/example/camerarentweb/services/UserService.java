@@ -13,22 +13,22 @@ public interface UserService {
     boolean isPhoneNumberUnique(String phoneNumber);
     boolean isEmailUnique(String email);
 
-    Optional<User> getUserById(Long id);
+    Optional<User> getUserById(int id);
     Optional<User> getUserByPhoneNumber(String phoneNumber);
     Optional<User> getUserByEmail(String email);
     List<User> getAllUsers();
     List<User> getUsersByRole(UserRole role);
 
     User updateUser(User user);
-    void updatePassword(Long userId, String oldPassword, String newPassword);
-    void updateEmail(Long userId, String newEmail);
-    void updatePhoneNumber(Long userId, String newPhoneNumber);
-    void updateUserRole(Long userId, UserRole newRole);
+    void updatePassword(int userId, String oldPassword, String newPassword);
+    void updateEmail(int userId, String newEmail);
+    void updatePhoneNumber(int userId, String newPhoneNumber);
+    void updateUserRole(int userId, UserRole newRole);
 
-    void deleteUser(Long userId);
+    void deleteUser(int userId);
 
     boolean authenticateUser(String phoneNumberOrEmail, String password);
-    void logoutUser(Long userId);
+    void logoutUser(int userId);
 
     List<User> searchUserByRole(UserRole user);
     List<User> getUsersByLastName(String lastName);
@@ -36,7 +36,7 @@ public interface UserService {
     long countUsers();
     long countUsersByRole(UserRole role);
 
-    void activateUser(Long userId);
-    void deactivateUser(Long userId);
-    boolean isUserActive(Long userId);
+    void activateUser(int userId);
+    void deactivateUser(int userId);
+    boolean isUserActive(int userId);
 }
