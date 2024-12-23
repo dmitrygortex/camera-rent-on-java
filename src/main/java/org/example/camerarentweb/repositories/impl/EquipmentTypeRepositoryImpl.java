@@ -5,6 +5,7 @@ import org.example.camerarentweb.entities.Category;
 import org.example.camerarentweb.entities.EquipmentType;
 import org.example.camerarentweb.entities.Order;
 import org.example.camerarentweb.repositories.EquipmentTypeRepository;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -8,13 +8,16 @@ import org.example.camerarentweb.repositories.EquipmentTypeRepository;
 import org.example.camerarentweb.services.EquipmentTypeDomainService;
 import org.example.camerarentweb.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class EquipmentTypeDomainServiceImpl implements EquipmentTypeDomainService {
+@EnableCaching
+public class EquipmentTypeDealsDomainServiceImpl implements EquipmentTypeDomainService {
 
     private final EquipmentTypeRepository equipmentTypeRepository;
     private final CategoryRepository categoryRepository;
@@ -22,9 +25,9 @@ public class EquipmentTypeDomainServiceImpl implements EquipmentTypeDomainServic
 
 
     @Autowired
-    public EquipmentTypeDomainServiceImpl(EquipmentTypeRepository equipmentTypeRepository,
-                                          CategoryRepository categoryRepository,
-                                          ReviewService reviewService) {
+    public EquipmentTypeDealsDomainServiceImpl(EquipmentTypeRepository equipmentTypeRepository,
+                                               CategoryRepository categoryRepository,
+                                               ReviewService reviewService) {
         this.equipmentTypeRepository = equipmentTypeRepository;
         this.categoryRepository = categoryRepository;
         this.reviewService = reviewService;
@@ -32,7 +35,10 @@ public class EquipmentTypeDomainServiceImpl implements EquipmentTypeDomainServic
     }
 
     @Override
-    public List<EquipmentTypeRatedCardDto> findAllByCategoryAndPrice(String category, double lowestPrice, double highestPrice) {
+    @Cacheable(value = "equipmentTypesByCategoryAndPrice", key = "#category + '-' + #lowestPrice + '-' + #highestPrice")
+    public List<EquipmentTypeRatedCardDto> findAllByCategoryAndPrice(String category,
+                                                                     double lowestPrice,
+                                                                     double highestPrice) {
         List<EquipmentType> equipmentTypes = equipmentTypeRepository.findByCategoryAndPrice(
                 categoryRepository.categoryByName(category),
                 lowestPrice,
@@ -55,6 +61,7 @@ public class EquipmentTypeDomainServiceImpl implements EquipmentTypeDomainServic
 
     // подумать как оптимизировать
     @Override
+    @Cacheable(value = "mostPopular", key = "#cardsNumber")
     public List<EquipmentTypeRatedCardDto> findTopMostPopular(int cardsNumber) {
         List<EquipmentType> allEquipmentTypes = equipmentTypeRepository.findAll(0, 999);
 
@@ -68,6 +75,7 @@ public class EquipmentTypeDomainServiceImpl implements EquipmentTypeDomainServic
     }
 
     @Override
+    @Cacheable(value = "equipmentKits", key = "#cardsNumber")
     public List<EquipmentTypeRatedCardDto> findEquipmentKits(int cardsNumber) {
         var equipmentTypesList = equipmentTypeRepository.findByCategory(categoryRepository.categoryByName("readyKits"));
         return equipmentTypesList.stream()
@@ -76,6 +84,7 @@ public class EquipmentTypeDomainServiceImpl implements EquipmentTypeDomainServic
     }
 
     @Override
+    @Cacheable(value = "equipmentSales", key = "#cardsNumber")
     public List<EquipmentTypeRatedCardDto> findEquipmentSales(int cardsNumber) {
         List<EquipmentType> allEquipmentTypes = equipmentTypeRepository.findAll(0, 999);
 
@@ -89,6 +98,7 @@ public class EquipmentTypeDomainServiceImpl implements EquipmentTypeDomainServic
     }
 
     @Override
+    @Cacheable(value = "equipmentTypeByName", key = "#name")
     public EquipmentTypeCardDto findByName(String name) {
         EquipmentType equipmentType = equipmentTypeRepository.findByName(name);
         if (equipmentType == null) {
@@ -102,7 +112,9 @@ public class EquipmentTypeDomainServiceImpl implements EquipmentTypeDomainServic
         equipmentTypeCardDto.setId(equipmentType.getId());
         equipmentTypeCardDto.setName(equipmentType.getName());
         equipmentTypeCardDto.setDescription(equipmentType.getDescription());
-        equipmentTypeCardDto.setPricePerDay(Double.parseDouble(String.format("%.2f", equipmentType.getPrice()).replace(",", ".")));
+        equipmentTypeCardDto.setPricePerDay(
+                Double.parseDouble(String.format("%.2f", equipmentType.getPrice())
+                        .replace(",", ".")));
         equipmentTypeCardDto.setImageUrl(equipmentType.getPhoto());
         equipmentTypeCardDto.setRating(reviewService.calculateEquipmentTypeRating(equipmentType.getId()));
         equipmentTypeCardDto.setCharacterization(equipmentType.getDescription());

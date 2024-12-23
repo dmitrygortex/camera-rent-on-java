@@ -1,5 +1,8 @@
 package org.example.camerarentweb.controllers.catalog;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.camerarentcontracts.controllers.base.BaseController;
 import org.example.camerarentcontracts.controllers.catalog.CatalogController;
 import org.example.camerarentcontracts.input.EquipmentTypeListInputModel;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
 public class CatalogControllerImpl extends BaseControllerImpl implements CatalogController{
 
     private final EquipmentTypeDomainService equipmentTypeService;
+    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     @Autowired
     public CatalogControllerImpl(EquipmentTypeDomainService equipmentTypeService) {
@@ -32,9 +37,22 @@ public class CatalogControllerImpl extends BaseControllerImpl implements Catalog
     @Override
     @GetMapping("/{categoryName}")
     public String catalogPage(
+            Principal principal,
             @PathVariable String categoryName,
             @ModelAttribute("filter") EquipmentTypeListInputModel filterInputModel,
             Model model) {
+        //вынести в сервис
+        String userName;
+        if (principal == null) {
+            userName = "anonymous";
+        }
+        else {
+            userName = principal.getName();
+        }
+
+        System.out.println("BOOKING PROCESS BY: " + userName);
+        LOG.log(Level.INFO, "Booking process started by " + userName);
+
         var page = filterInputModel.page() != null ? filterInputModel.page() : 0;
         var size = filterInputModel.size() != null ? filterInputModel.size() : 25;
         var lowestPrice = filterInputModel.lowestPrice() != null ? filterInputModel.lowestPrice() : 0;

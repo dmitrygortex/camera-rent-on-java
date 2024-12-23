@@ -5,6 +5,8 @@ import org.example.camerarentweb.repositories.*;
 import org.example.camerarentweb.repositories.impl.UserRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,18 +14,24 @@ import java.util.Random;
 
 @Component
 public class CommandLiner implements CommandLineRunner {
-    @Autowired
-    private UserRepositoryImpl userRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private EquipmentTypeRepository equipmentTypeRepository;
-    @Autowired
-    private ReviewRepository reviewRepository;
-    @Autowired
-    private EquipmentUnitRepository equipmentUnitRepository;
+    private final UserRepositoryImpl userRepository;
+    private final CategoryRepository categoryRepository;
+    private final EquipmentTypeRepository equipmentTypeRepository;
+    private final ReviewRepository reviewRepository;
+    private final EquipmentUnitRepository equipmentUnitRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private Random random = new Random();
+
+    @Autowired
+    public CommandLiner(UserRepositoryImpl userRepository, CategoryRepository categoryRepository, EquipmentTypeRepository equipmentTypeRepository, ReviewRepository reviewRepository, EquipmentUnitRepository equipmentUnitRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
+        this.equipmentTypeRepository = equipmentTypeRepository;
+        this.reviewRepository = reviewRepository;
+        this.equipmentUnitRepository = equipmentUnitRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public void run(String... args) throws Exception {
@@ -40,7 +48,7 @@ public class CommandLiner implements CommandLineRunner {
 
         User user2 = new User(
                 "+79991223777",
-                "myownsecretpassword",
+                passwordEncoder.encode("myownsecretpassword"),
                 "dimaa77777@hotmail.com",
                 "G",
                 "Dima",
@@ -51,13 +59,33 @@ public class CommandLiner implements CommandLineRunner {
 
         User user3 = new User(
                 "89090073399",
-                "toopseeecreet))",
+                passwordEncoder.encode("toopseeecreet))"),
                 "somemaaail@mail.ru",
                 "Belfort",
                 "Jordan",
                 UserRole.USER
         );
         user3 = userRepository.save(user3);
+
+        User user4 = new User(
+                "87007771107",
+                passwordEncoder.encode("postgres"),
+                "gortex@internet.ru",
+                "DM",
+                "BO$$",
+                UserRole.ADMIN
+        );
+        user4 = userRepository.save(user4);
+
+        User user5 = new User(
+                "80001112233",
+                passwordEncoder.encode("12345678"),
+                "2@2",
+                "1USER",
+                "USER1",
+                UserRole.USER
+        );
+        user4 = userRepository.save(user5);
 
 
 

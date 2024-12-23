@@ -1,5 +1,7 @@
 package org.example.camerarentweb.controllers.admin;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.camerarentcontracts.input.ApplyRentStatusAndAddNote;
 import org.example.camerarentcontracts.viewmodel.pages.admin.adminsearch.AllUnitsPageViewModel;
 import org.example.camerarentcontracts.viewmodel.pages.admin.adminsearch.UnitInSearchListViewModel;
@@ -22,6 +24,7 @@ import java.util.List;
 public class EditUnitControllerImpl extends BaseControllerImpl {
 
     private final EquipmentUnitService equipmentUnitService;
+    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     @Autowired
     public EditUnitControllerImpl(EquipmentUnitService equipmentUnitService) {

@@ -15,16 +15,27 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+//import java.util.logging.Level;
+//import java.util.logging.LogManager;
+//import java.util.logging.Logger;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Controller
 @RequestMapping("/")
 public class HomeControllerImpl extends BaseControllerImpl implements HomeController {
 
     private final EquipmentTypeDomainService equipmentTypeService;
+    private static final Logger LOG = LogManager.getLogger(Controller.class);
+
+
     @Autowired
     public HomeControllerImpl(EquipmentTypeDomainService equipmentTypeService) {
         this.equipmentTypeService = equipmentTypeService;
@@ -32,9 +43,21 @@ public class HomeControllerImpl extends BaseControllerImpl implements HomeContro
 
     @Override
     @GetMapping()
-    public String index(
+    public String index(Principal principal,
             Model model
     ) {
+
+        //вынести в сервис
+        String userName;
+        if (principal == null) {
+            userName = "anonymous";
+        }
+        else {
+            userName = principal.getName();
+        }
+
+        System.out.println("HOME PAGE WAS VISITED BY: " + userName);
+        LOG.log(Level.INFO, "Show Home Page for " + userName);
 
         List<EquipmentTypeRatedCardDto> listOfPopularEquipmentCards = equipmentTypeService.findTopMostPopular(5);
         System.out.println("listOfPopularEquipmentCards.size(): " + listOfPopularEquipmentCards.size());
@@ -64,7 +87,6 @@ public class HomeControllerImpl extends BaseControllerImpl implements HomeContro
                 )).toList();
         System.out.println(">>>>>\n\n\n\n\n>>>>>" + popularEquipmentViewModelList.size() + "\n\n\n\n");
 
-
         MainPageViewModel mainPageViewModel = new MainPageViewModel(
                 createBaseViewModel("Camera Rent | by Dmitry Gortex"),
                 "https://sun9-39.userapi.com/impg/pQrM75AF0JpXL4XjhKKENqDs8hBYmmmMNd-xAw/V5CSexfZO-M.jpg?size=1905x713&quality=95&sign=9076fda714b23eaa1dc788763a58ac29&type=album",
@@ -72,22 +94,6 @@ public class HomeControllerImpl extends BaseControllerImpl implements HomeContro
                 new EquipmentSetsSectionViewModel(equipmentSetsViewModelList),
                 new EquipmentSalesSectionViewModel(equipmentSalesViewModelList)
                 );
-
-
-//        List<EquipmentViewModel> test = new ArrayList<>(Arrays.asList(new EquipmentViewModel(
-//                "Test1",
-//                4.5,
-//                1000,
-//                "base1.jpg")));
-//        MainPageViewModel testMain = new MainPageViewModel(
-//                createBaseViewModel("Camera Rent | by Dmitry Gortex"),
-//                "https://sun9-57.userapi.com/impg/xHb36c2xr04szpvUtt5gJctwLZnwM2HfVyltxA/HxPhMOQWT8Q.jpg?size=1862x590&quality=95&sign=82427dc92055a17f103129a7579d9040&type=album",
-//                test
-////                new PopularEquipmentSectionViewModel(test
-////                ),
-////                new EquipmentSetsSectionViewModel(equipmentSetsViewModelList),
-////                new EquipmentSalesSectionViewModel(equipmentSalesViewModelList)
-//                );
         model.addAttribute("model", mainPageViewModel);
         return "index";
     }

@@ -80,3 +80,4 @@ public class EquipmentType extends BaseEntity {
         this.photo = photo;
     }
 }
+
