@@ -2,11 +2,12 @@ package org.example.camerarentweb.services;
 
 import org.example.camerarentweb.entities.User;
 import org.example.camerarentweb.entities.UserRole;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface UserService {
+public interface UserService{
 
     User createUser(User user);
 

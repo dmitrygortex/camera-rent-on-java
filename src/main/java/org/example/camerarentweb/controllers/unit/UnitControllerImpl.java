@@ -49,6 +49,9 @@
 
 package org.example.camerarentweb.controllers.unit;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.camerarentcontracts.controllers.unit.UnitController;
 import org.example.camerarentcontracts.viewmodel.pages.catalog.EquipmentViewModel;
 import org.example.camerarentcontracts.viewmodel.pages.unit.EquipmentTypePageViewModel;
@@ -68,6 +71,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -75,13 +79,14 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/units")
-public class UnitControllerImpl extends BaseControllerImpl {
+public class UnitControllerImpl extends BaseControllerImpl implements UnitController {
 
     private final EquipmentTypeDomainService equipmentTypeDomainService;
     private final ReviewService reviewService;
     private final EquipmentUnitService equipmentUnitService;
     private final OrderService orderService;
     private final UserService userService;
+    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     @Autowired
     public UnitControllerImpl(EquipmentTypeDomainService equipmentTypeDomainService,
@@ -97,11 +102,23 @@ public class UnitControllerImpl extends BaseControllerImpl {
     }
 
     @GetMapping("/{name}")
-    public String viewEquipmentCard(@PathVariable String name, Model model) {
+    public String viewEquipmentCard(Principal principal, @PathVariable String name, Model model) {
         EquipmentTypeCardDto equipment = equipmentTypeDomainService.findByName(name);
         if (equipment == null) {
             return "error/404";
         }
+
+        //вынести в сервис
+        String userName;
+        if (principal == null) {
+            userName = "anonymous";
+        }
+        else {
+            userName = principal.getName();
+        }
+
+        System.out.println("UNIT PAGE WAS VISITED BY: " + userName);
+        LOG.log(Level.INFO, "Show Unit Page for " + userName);
 
         List<ReviewDto> listOfReviewModels = reviewService.findByEquipmentTypeId(equipment.getId());
         System.out.println("ID in List<ReviewDto> listOfReviewModels = reviewService.findByEquipmentTypeId(equipment.getId()); is \n" + equipment.getId()+ "\n\n");
@@ -149,11 +166,26 @@ public class UnitControllerImpl extends BaseControllerImpl {
     }
     @PostMapping("/book")
     public String bookEquipment(
+            Principal principal,
             @RequestParam("startDate") String startDate,
             @RequestParam("endDate") String endDate,
             @RequestParam("equipmentId") int equipmentId,
             Model model
     ) {
+
+        //вынести в сервис
+        String userName;
+        if (principal == null) {
+            userName = "anonymous";
+        }
+        else {
+            userName = principal.getName();
+        }
+
+        System.out.println("BOOKING PROCESS BY: " + userName);
+        LOG.log(Level.INFO, "Booking process started by " + userName);
+
+
         try {
             LocalDateTime start = LocalDate.parse(startDate).atStartOfDay();
             LocalDateTime end = LocalDate.parse(endDate).atStartOfDay();

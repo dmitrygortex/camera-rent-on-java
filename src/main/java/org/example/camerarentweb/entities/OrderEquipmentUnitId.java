@@ -42,3 +42,5 @@ public class OrderEquipmentUnitId implements Serializable {
         return Objects.hash(orderId, equipmentUnitId);
     }
 }
+
+

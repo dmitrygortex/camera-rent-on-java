@@ -1,11 +1,19 @@
 package org.example.camerarentweb.entities;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity {
+public class User extends BaseEntity implements Serializable {
 
     private String phoneNumber;
     private String password;
@@ -19,7 +27,12 @@ public class User extends BaseEntity {
 
     public User() {}
 
-    public User(String phoneNumber, String password, String email, String lastName, String firstName, UserRole role) {
+    public User(String phoneNumber,
+                String password,
+                String email,
+                String lastName,
+                String firstName,
+                UserRole role) {
         setPhoneNumber(phoneNumber);
         setPassword(password);
         setEmail(email);
@@ -71,10 +84,7 @@ public class User extends BaseEntity {
 
     public void setPassword(String password) {
         if (password == null || password.trim().isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be null or blank");
-        }
-        if (password.length() < 8 || password.length() > 64) {
-            throw new IllegalArgumentException("Password must be between 8 and 64 characters");
+            throw new IllegalArgumentException("Hash of password cannot be null or blank");
         }
         this.password = password;
     }

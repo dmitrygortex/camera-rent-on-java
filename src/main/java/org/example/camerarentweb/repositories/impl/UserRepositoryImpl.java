@@ -7,6 +7,7 @@ import org.example.camerarentweb.repositories.UserRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl extends BaseRepositoryImpl<User> implements UserRepository {
@@ -25,10 +26,40 @@ public class UserRepositoryImpl extends BaseRepositoryImpl<User> implements User
 
     @Override
     public User findByEmail(String email) {
-        return entityManager.createQuery(
-                        "SELECT u FROM User u WHERE u.email = :email AND u.deleted = false", User.class)
-                .setParameter("email", email)
-                .getSingleResult();
+//        try {
+//            User user = entityManager.createQuery(
+//                            "SELECT u FROM User u WHERE u.email = :email AND u.deleted = false", User.class)
+//                    .setParameter("email", email)
+//                    .getSingleResult();
+//            return Optional.of(user);
+//        } catch (Exception e) {
+//            return Optional.empty();
+//        }
+        System.out.println("findByEmail in user repository");
+        // как будет время переделать всё под норм реализацию с Optional
+        try {
+            return entityManager.createQuery(
+                            "SELECT u FROM User u WHERE u.email = :email AND u.deleted = false", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+        }
+        catch (Exception e){
+            return null;
+        }
+    }
+
+    @Override
+    public Optional<User> findOptionalByEmail(String email) {
+        System.out.println("findOptionalByEmail in user repository");
+        try {
+            User user = entityManager.createQuery(
+                            "SELECT u FROM User u WHERE u.email = :email AND u.deleted = false", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+            return Optional.of(user);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     @Override

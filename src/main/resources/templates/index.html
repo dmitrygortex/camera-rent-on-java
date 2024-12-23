@@ -1,7 +1,5 @@
 
 <!--head th:replace="~{fragments/head}"/-->
-
-
 <!--main th:replace="fragments/catalog-page :: main"/-->
 <!DOCTYPE html>
 <html lang="ru" class="h-100" xmlns:th="http://www.thymeleaf.org">
@@ -21,6 +19,22 @@
         <img class="card-img-top" th:src="${model.bannerImageUrl}" alt="banner not found">
     </div>
 </div>
+
+<!--span th:if="${#authentication != null && #authentication.authenticated}">
+            >>>DEBUG, <strong th:text="${#authentication.credentials }">[User]</strong>!
+        </span>
+<span th:if="${#authentication != null && #authentication.authenticated}">
+            >>>DEBUG, <strong th:text="${#authentication.authenticated }">[User]</strong>!
+        </span>
+<span th:if="${#authentication != null && #authentication.authenticated}">
+            >>>DEBUG, <strong th:text="${#authentication.principal }">[User]</strong>!
+        </span>
+<span th:if="${#authentication != null && #authentication.authenticated}">
+            >>>DEBUG, <strong th:text="${#authentication.details }">[User]</strong>!
+        </span>
+<span th:if="${#authentication != null && #authentication.authenticated}">
+            >>>DEBUG, <strong th:text="${#authentication.authorities }">[User]</strong>!
+        </span-->
 
 <main class="container my-4 pb-4">
     <section class="mb-5">

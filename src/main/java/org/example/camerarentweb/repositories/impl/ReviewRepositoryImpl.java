@@ -13,9 +13,6 @@ import java.util.List;
 @Repository
 public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review> implements ReviewRepository {
 
-//    @PersistenceContext
-//    private EntityManager entityManager;
-
     public ReviewRepositoryImpl() {
         super(Review.class);
     }
@@ -23,7 +20,8 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review> implements 
     @Override
     public List<Review> findByUserId(String userId) {
         return entityManager.createQuery(
-                        "SELECT r FROM Review r WHERE r.user.id = :userId AND r.deleted = false", Review.class)
+                        "SELECT r FROM Review r WHERE r.user.id = :userId AND r.deleted = false",
+                        Review.class)
                 .setParameter("userId", userId)
                 .getResultList();
     }
@@ -32,8 +30,10 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review> implements 
     public List<Review> findByEquipmentTypeId(int equipmentTypeId) {
         System.out.println("equipmentTypeId in ReviewRepositoryImpl.findByEquipmentTypeId: " + equipmentTypeId);
         return entityManager.createQuery(
-                        "SELECT r FROM Review r WHERE r.equipmentType.id = :equipmentTypeId AND r.deleted = false", Review.class)
+                        "SELECT r FROM Review r WHERE r.equipmentType.id = :equipmentTypeId AND r.deleted = false",
+                        Review.class)
                 .setParameter("equipmentTypeId", equipmentTypeId)
                 .getResultList();
     }
 }
+

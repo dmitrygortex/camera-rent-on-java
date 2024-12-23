@@ -28,7 +28,6 @@ public class OrderEquipmentUnit{
         return id;
     }
 
-
     public void setId(OrderEquipmentUnitId id) {
         this.id = id;
     }

@@ -1,9 +1,19 @@
-<header th:fragment="header" class="bg-dark text-white py-3">
+<header th:fragment="header" class="bg-dark text-white py-3" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <div class="container d-flex justify-content-between align-items-center">
         <a href="/" class="h3 mb-0 text-decoration-none text-reset">📷 CameraRent</a>
         <nav>
-            <a href="/auth/login" id="loginBtn" class="text-white text-decoration-none me-3">Войти</a>
-            <a href="/auth/register" id="registerBtn" class="text-white text-decoration-none">Регистрация</a>
+            <a sec:authorize="hasAnyRole('ANONYMOUS')"
+               href="/auth/login" id="loginBtn" class="text-white text-decoration-none me-3">Войти</a>
+            <a sec:authorize="hasAnyRole('ANONYMOUS')"
+               href="/auth/register" id="registerBtn" class="text-white text-decoration-none">Регистрация</a>
+            <a sec:authorize="hasAnyRole('USER', 'ADMIN')"
+               href="/account" id="accountBtn" class="text-white text-decoration-none me-3">Личный кабинет</a>
+            <a sec:authorize="hasAnyRole('USER', 'ADMIN')"
+               href="/auth/logout" id="logoutBtn" class="text-white text-decoration-none">Выйти</a>
         </nav>
     </div>
 </header>
+
+
+
+
