@@ -87,7 +87,6 @@ public class UnitControllerImpl extends BaseControllerImpl implements UnitContro
     private final OrderService orderService;
     private final UserService userService;
     private static final Logger LOG = LogManager.getLogger(Controller.class);
-
     @Autowired
     public UnitControllerImpl(EquipmentTypeDomainService equipmentTypeDomainService,
                               ReviewService reviewService,
@@ -98,8 +97,7 @@ public class UnitControllerImpl extends BaseControllerImpl implements UnitContro
         this.reviewService = reviewService;
         this.equipmentUnitService = equipmentUnitService;
         this.orderService = orderService;
-        this.userService = userService;
-    }
+        this.userService = userService;}
 
     @GetMapping("/{name}")
     public String viewEquipmentCard(Principal principal, @PathVariable String name, Model model) {

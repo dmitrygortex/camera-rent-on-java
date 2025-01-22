@@ -20,4 +20,6 @@ public class EquipmentTypeServiceImpl implements EquipmentTypeService {
     public EquipmentTypeRatedCardDto findByName(String name) {
         return null;
     }
+
+
 }

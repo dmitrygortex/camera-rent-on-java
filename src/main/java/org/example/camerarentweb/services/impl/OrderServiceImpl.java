@@ -35,13 +35,13 @@ public class OrderServiceImpl implements OrderService {
         order.setEndDate(endDate);
         order.setStatus(OrderStatus.CREATED);
         order.setAmount(equipmentUnits.size());
-        orderRepository.save(order); // Сохраняем заказ, чтобы получить ID
+        orderRepository.save(order);
 
-        // Создаём и сохраняем связи OrderEquipmentUnit
+
         for (EquipmentUnit unit : equipmentUnits) {
             OrderEquipmentUnit orderEquipmentUnit = new OrderEquipmentUnit();
 
-            // Создаём составной ключ
+
             OrderEquipmentUnitId id = new OrderEquipmentUnitId();
             id.setOrderId(order.getId());
             id.setEquipmentUnitId(unit.getId());
@@ -49,21 +49,21 @@ public class OrderServiceImpl implements OrderService {
 
             orderEquipmentUnit.setOrder(order);
             orderEquipmentUnit.setEquipmentUnit(unit);
-            orderEquipmentUnit.setQuantity(1); // Заглушка для количества
+            orderEquipmentUnit.setQuantity(1);
 
             orderEquipmentUnitRepository.save(orderEquipmentUnit);
         }
 
-        // Обновляем статус оборудования
+
         for (EquipmentUnit unit : equipmentUnits) {
             equipmentUnitService.changeUnitStatus(unit.getId(), EquipmentStatus.RESERVED);
         }
 
-        // Устанавливаем стоимость заказа
+
         order.setCost(calculateOrderCost(order));
         order.setStatus(OrderStatus.CONFIRMED);
 
-        // Сохраняем обновленный заказ
+
         return orderRepository.save(order);
     }
 
